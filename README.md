@@ -1,2 +1,3 @@
-# wordle
+在网上没找到合适的wordle solver 打puzzlehunt可能比较需要不限定长度的solver.
+这里的词典选择的是常用wordle的词典为迎合大部分情况，所以会少单词，比如tangela就没有，如有必要，请自行使用别的词典辅助使用！
 interactive wordle solver
