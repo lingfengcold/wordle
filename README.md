@@ -1,4 +1,6 @@
 在网上没找到合适的wordle solver 打puzzlehunt可能比较需要不限定长度的solver.
 这里的词典选择的是常用wordle的词典为迎合大部分情况，所以会少单词，比如tangela就没有，如有必要，请自行使用别的词典辅助使用！
+对于常规非5/6字母wordle可能会多单词 这个问题是我不知道这些网站的词典库是什么，多多担待吧
+
 100%AI生成
 interactive wordle solver
