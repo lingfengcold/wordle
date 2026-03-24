@@ -11,7 +11,7 @@ interface WordleSolverProps {}
 export const WordleSolver: React.FC<WordleSolverProps> = () => {
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [length, setLength] = useState<number>(5);
-  const [inputLength, setInputLength] = useState<number>(5);
+  const [inputLength, setInputLength] = useState<string>('5');
   
   // Dictionary state
   const [allWords, setAllWords] = useState<string[]>(FALLBACK_WORDS);
@@ -147,7 +147,11 @@ export const WordleSolver: React.FC<WordleSolverProps> = () => {
   };
 
   const handleStartGame = () => {
-      setLength(inputLength);
+      let val = parseInt(inputLength);
+      if (isNaN(val) || val < 3) val = 3;
+      if (val > 50) val = 50;
+      setLength(val);
+      setInputLength(val.toString());
       setGameStarted(true);
   };
   
@@ -173,10 +177,17 @@ export const WordleSolver: React.FC<WordleSolverProps> = () => {
                     <div className="flex items-center gap-4">
                         <input 
                             type="number" 
+                            inputMode="numeric"
                             min="3" 
                             max="50" 
                             value={inputLength} 
-                            onChange={(e) => setInputLength(Math.max(3, Math.min(50, parseInt(e.target.value) || 5)))}
+                            onChange={(e) => setInputLength(e.target.value)}
+                            onBlur={() => {
+                                let val = parseInt(inputLength);
+                                if (isNaN(val) || val < 3) val = 3;
+                                if (val > 50) val = 50;
+                                setInputLength(val.toString());
+                            }}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
                             placeholder="5"
                         />

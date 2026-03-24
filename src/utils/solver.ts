@@ -1,15 +1,24 @@
 import _ from 'lodash';
+import commonWordsList from '../assets/common-words.json';
+
+const commonWordsSet = new Set(commonWordsList);
 
 // Best starting words for common lengths to save computation time
+// Optimized for "Singular/Prototype" preference where possible
 const STARTING_WORDS: Record<number, string> = {
-  3: 'ate',
-  4: 'sane',
-  5: 'slate',
-  6: 'raised',
+  3: 'eat',
+  4: 'near',
+  5: 'arise', // standard, 3 vowels
+  6: 'orient', 
   7: 'staring',
-  8: 'stainers',
-  9: 'retainers',
-  10: 'restraints'
+  8: 'creation',
+  9: 'inflation',
+  10: 'projection',
+  11: 'information',
+  12: 'relationship',
+  13: 'communication',
+  14: 'administration',
+  15: 'congratulations'
 };
 
 // Feedback types
@@ -123,6 +132,12 @@ function calculateFrequencyScore(guess: string, candidates: string[]): number {
              seen.add(char);
         }
     }
+
+    // Boost common words
+    if (commonWordsSet.has(guess)) {
+        score += candidates.length * 2.0; // Significant boost
+    }
+
     return score;
 }
 
@@ -167,8 +182,13 @@ export function getBestGuess(candidates: string[], allWords: string[]): string {
           const entropy = calculateEntropy(word, candidates);
           // Prefer words in candidates if entropy is equal (hard mode preference / chance to win)
           const isCandidate = candidates.includes(word);
-          // Add tiny bias to candidate words so if entropy is same, we pick a possible answer
-          const adjustedEntropy = entropy + (isCandidate ? 0.0001 : 0);
+          const isCommon = commonWordsSet.has(word);
+          
+          // Add biases:
+          // 1. Candidate preference: Small (0.0001) - mainly tie-breaker
+          // 2. Common word preference: Medium (0.5) - prioritize normal words if entropy is comparable
+          // Note: Max entropy is usually around 5-10 bits. 0.5 bits is significant.
+          const adjustedEntropy = entropy + (isCandidate ? 0.0001 : 0) + (isCommon ? 0.5 : 0);
           
           if (adjustedEntropy > maxEntropy) {
               maxEntropy = adjustedEntropy;
